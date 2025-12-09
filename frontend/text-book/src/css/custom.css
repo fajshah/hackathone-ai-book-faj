@@ -1,0 +1,53 @@
+:root {
+  --ifm-color-primary: #e945c5; /* Oxford Blue */
+  --ifm-color-primary-dark: #d140be;
+  --ifm-color-primary-darker: #e945c5;
+  --ifm-color-primary-darkest: #e945c5;
+
+  --ifm-color-primary-light: #2f6ab3;
+  --ifm-color-primary-lighter: #4a82c8;
+  --ifm-color-primary-lightest: #6fa0de;
+
+  /* Backgrounds */
+  --ifm-background-color: #ece2ec; /* Soft English grey */
+  --ifm-background-surface-color: #ffffff;
+
+  /* Text Colors */
+  --ifm-font-color-base: #1f2937; /* Dark text */
+  --ifm-font-color-secondary: #4b5563; /* Light text */
+
+  /* Accents */
+  --ifm-color-info: #a3bffa; /* Pastel English Blue */
+}
+
+/* Navbar */
+.navbar {
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Footer */
+.footer {
+  background-color: #e945c5 !important;
+  color: #bf12c5 !important;
+}
+
+/* Headings */
+h1, h2, h3 {
+  color: #3810c9 !important;
+}
+
+/* Code Blocks */
+.language-python,
+.language-js,
+.language-ts {
+  background: #eef2f7 !important; /* soft steel grey */
+  border-radius: 8px !important;
+}
+
+/* Cards */
+.card {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+}

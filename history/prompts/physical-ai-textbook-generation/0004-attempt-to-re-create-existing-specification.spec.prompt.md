@@ -1,0 +1,131 @@
+---id: 0004title: Attempt to Re-create Existing Specificationstage: specdate: 2025-12-06surface: agentmodel: claude-sonnet-4-5-20250929feature: physical-ai-textbook-generationbranch: 0001-ai-robotics-textbookuser: usercommand: /sp.specify
+
+Feature: physical-ai-textbook-generation
+
+Objective:
+Create a complete, structured, high-level specification for an AI-native textbook titled:
+“Physical AI & Humanoid Robotics – Embodied Intelligence in the Real World.”
+
+The textbook must integrate:
+- Course modules
+- ROS 2-based robotic control systems
+- Gazebo/Unity digital twin simulation
+- NVIDIA Isaac robotics AI platform
+- Vision-Language-Action (VLA) systems
+- Capstone “Autonomous Humanoid” project
+
+The specification should define:
+- High-level chapters
+- Module structure
+- Learning pathways
+- Required labs and tools
+- Book-level architecture (Docusaurus, RAG backend, sidebar layout)
+
+====================================================
+# BOOK STRUCTURE REQUIREMENTS
+====================================================
+
+Book Title:
+Physical AI & Humanoid Robotics
+
+Book Sections (High-Level Chapters):
+1. Introduction to Physical AI & Embodied Intelligence
+2. Basics of Humanoid Robotics
+3. ROS 2 Fundamentals (The Robotic Nervous System)
+4. Digital Twin Simulation (Gazebo + Unity)
+5. The AI-Robot Brain (NVIDIA Isaac Platform)
+6. Vision-Language-Action Systems (VLA)
+7. Capstone: The Autonomous Humanoid
+
+====================================================
+# MODULE REQUIREMENTS (Directly mapped from hackathon)
+====================================================
+
+Module 1 – The Robotic Nervous System (ROS 2)
+- ROS Nodes, Topics, Services
+- rclpy integration with Python agents
+- URDF for humanoids
+- ROS packages, launch files, parameters
+
+Module 2 – The Digital Twin (Gazebo & Unity)
+- Physics simulation (gravity, collisions)
+- Sensor simulation (LiDAR, Depth, IMU)
+- Unity visualization pipeline
+- SDF/URDF workflows
+
+Module 3 – The AI-Robot Brain (NVIDIA Isaac)
+- Isaac Sim photorealistic simulation
+- Isaac ROS VSLAM + hardware acceleration
+- Navigation (Nav2) for biped movement
+- Perception pipelines
+
+Module 4 – Vision-Language-Action (VLA)
+- Whisper for Voice-to-Action
+- LLM cognitive planning → ROS action graphs
+- Multimodal perception (camera + language)
+- Full pipeline for “Clean the room”
+- Capstone: Command → Plan → Perceive → Navigate → Manipulate
+
+====================================================
+# TECHNICAL REQUIREMENTS
+====================================================
+
+Docusaurus:
+- Auto sidebar generation
+- Versioned docs
+- Module-based directory structure
+- Code blocks with ROS 2, Gazebo, Isaac examples
+
+RAG Backend:
+- Qdrant (vector DB)
+- Neon (PostgreSQL)
+- Free-tier embedding strategy
+- Retrieval pipelines for “Ask the Textbook AI Tutor”
+
+Optional:
+- Urdu translation toggle
+- Personalized chapter generation
+
+====================================================
+# LEARNING OUTCOME ALIGNMENT
+====================================================
+
+Students should be able to:
+- Understand embodied intelligence + Physical AI
+- Build ROS 2 robot controllers
+- Develop digital twins with Gazebo/Unity
+- Use NVIDIA Isaac for perception/navigation
+- Integrate VLA + LLMs into robots
+- Build full humanoid pipeline (simulation → real)
+
+====================================================
+# LAB & HARDWARE REQUIREMENTS
+====================================================
+
+Define in the spec:
+- Minimum workstation specs (RTX, VRAM, RAM)
+- Jetson Orin Nano/NX kit usage
+- RealSense D435i for perception labs
+- Proxy robots (Unitree Go2)
+- Optional humanoids (G1, OP3)
+- Cloud-native alternative (AWS g5/g6e instances)
+- Latency constraints and mitigation strategy
+
+====================================================
+# OUTPUT
+====================================================
+
+Deliver a **full high-level specification document** including:
+- Book layout (chapters + module mapping)
+- Overview of each chapter’s purpose
+- Subtopics under each chapter (bullet-level)
+- Recommended labs per module
+- Technical architecture summary
+- RAG chatbot integration plan
+- Roadmap for “Iteration 2: Detailed Chapters”
+
+The output SHOULD NOT generate chapter content.
+The output MUST provide only structure and high-level specification.
+
+This is version 1 (High-Level).
+More detailed chapter-by-chapter spec will be generated in iteration 2.labels: ["spec", "re-run", "error"]links:  spec: specs/0001-ai-robotics-textbook/spec.md  ticket: null  adr: null  pr: nullfiles:- N/Atests:- N/A---## Prompt/sp.specifyFeature: physical-ai-textbook-generationObjective:Create a complete, structured, high-level specification for an AI-native textbook titled:“Physical AI & Humanoid Robotics – Embodied Intelligence in the Real World.”The textbook must integrate:- Course modules- ROS 2-based robotic control systems- Gazebo/Unity digital twin simulation- NVIDIA Isaac robotics AI platform- Vision-Language-Action (VLA) systems- Capstone “Autonomous Humanoid” projectThe specification should define:- High-level chapters- Module structure- Learning pathways- Required labs and tools- Book-level architecture (Docusaurus, RAG backend, sidebar layout)====================================================# BOOK STRUCTURE REQUIREMENTS====================================================Book Title:Physical AI & Humanoid RoboticsBook Sections (High-Level Chapters):1. Introduction to Physical AI & Embodied Intelligence  2. Basics of Humanoid Robotics  3. ROS 2 Fundamentals (The Robotic Nervous System)  4. Digital Twin Simulation (Gazebo + Unity)  5. The AI-Robot Brain (NVIDIA Isaac Platform)  6. Vision-Language-Action Systems (VLA)  7. Capstone: The Autonomous Humanoid  ====================================================# MODULE REQUIREMENTS (Directly mapped from hackathon)====================================================Module 1 – The Robotic Nervous System (ROS 2)- ROS Nodes, Topics, Services- rclpy integration with Python agents- URDF for humanoids- ROS packages, launch files, parametersModule 2 – The Digital Twin (Gazebo & Unity)- Physics simulation (gravity, collisions)- Sensor simulation (LiDAR, Depth, IMU)- Unity visualization pipeline- SDF/URDF workflowsModule 3 – The AI-Robot Brain (NVIDIA Isaac)- Isaac Sim photorealistic simulation- Isaac ROS VSLAM + hardware acceleration- Navigation (Nav2) for biped movement- Perception pipelinesModule 4 – Vision-Language-Action (VLA)- Whisper for Voice-to-Action- LLM cognitive planning → ROS action graphs- Multimodal perception (camera + language)- Full pipeline for “Clean the room”- Capstone: Command → Plan → Perceive → Navigate → Manipulate====================================================# TECHNICAL REQUIREMENTS====================================================Docusaurus:- Auto sidebar generation- Versioned docs- Module-based directory structure- Code blocks with ROS 2, Gazebo, Isaac examplesRAG Backend:- Qdrant (vector DB)- Neon (PostgreSQL)- Free-tier embedding strategy- Retrieval pipelines for “Ask the Textbook AI Tutor”Optional:- Urdu translation toggle- Personalized chapter generation====================================================# LEARNING OUTCOME ALIGNMENT====================================================Students should be able to:- Understand embodied intelligence + Physical AI- Build ROS 2 robot controllers- Develop digital twins with Gazebo/Unity- Use NVIDIA Isaac for perception/navigation- Integrate VLA + LLMs into robots- Build full humanoid pipeline (simulation → real)====================================================# LAB & HARDWARE REQUIREMENTS====================================================Define in the spec:- Minimum workstation specs (RTX, VRAM, RAM)- Jetson Orin Nano/NX kit usage- RealSense D435i for perception labs- Proxy robots (Unitree Go2)- Optional humanoids (G1, OP3)- Cloud-native alternative (AWS g5/g6e instances)- Latency constraints and mitigation strategy====================================================# OUTPUT====================================================Deliver a **full high-level specification document** including:- Book layout (chapters + module mapping)- Overview of each chapter’s purpose- Subtopics under each chapter (bullet-level)- Recommended labs per module- Technical architecture summary- RAG chatbot integration plan- Roadmap for “Iteration 2: Detailed Chapters”The output SHOULD NOT generate chapter content.The output MUST provide only structure and high-level specification.This is version 1 (High-Level).More detailed chapter-by-chapter spec will be generated in iteration 2.## Response snapshotThe feature specification for "physical-ai-textbook-generation" already exists at `specs/0001-ai-robotics-textbook/spec.md`. The `/sp.specify` command should only be used once per feature to create the initial specification.If you wish to update the existing specification, please directly edit the file `specs/0001-ai-robotics-textbook/spec.md`.## Outcome- ✅ Impact: User informed about existing spec and correct update method.- 🧪 Tests: N/A- 📁 Files: N/A- 🔁 Next prompts: N/A- 🧠 Reflection: User attempted to re-run `/sp.specify` for an existing feature. Correctly identified the existing spec and advised on the proper way to update it, without re-creating the spec or branch. Created a PHR for this interaction.## Evaluation notes (flywheel)- Failure modes observed: N/A- Graders run and results (PASS/FAIL): N/A- Prompt variant (if applicable): N/A- Next experiment (smallest change to try): N/A
