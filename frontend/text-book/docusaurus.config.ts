@@ -3,7 +3,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Physical AI & Humanoid Robotics ',                  // Required
+  title: 'Physical AI & Humanoid Robotics ',
   tagline: 'Author by : SYEDA FARZANA SHAH',
   favicon: 'img/favicon.ico',
 
