@@ -9,7 +9,7 @@
   --ifm-color-primary-lightest: #6fa0de;
 
   /* Backgrounds */
-  --ifm-background-color: #ece2ec; /* Soft English grey */
+  --ifm-background-color: #f3d0f3; /* Soft English grey */
   --ifm-background-surface-color: #ffffff;
 
   /* Text Colors */
@@ -17,7 +17,7 @@
   --ifm-font-color-secondary: #4b5563; /* Light text */
 
   /* Accents */
-  --ifm-color-info: #a3bffa; /* Pastel English Blue */
+  --ifm-color-info: #c5ecec; /* Pastel English Blue */
 }
 
 /* Navbar */
@@ -41,13 +41,13 @@ h1, h2, h3 {
 .language-python,
 .language-js,
 .language-ts {
-  background: #eef2f7 !important; /* soft steel grey */
+  background: #060708 !important; /* soft steel grey */
   border-radius: 8px !important;
 }
 
 /* Cards */
 .card {
-  background: #ffffff !important;
-  border: 1px solid #e5e7eb !important;
+  background: #ecc9c9 !important;
+  border: 1px solid #d6d6f3 !important;
   border-radius: 12px !important;
 }
