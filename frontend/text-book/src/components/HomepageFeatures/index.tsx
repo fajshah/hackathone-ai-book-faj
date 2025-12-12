@@ -1,7 +1,31 @@
 import type {ReactNode} from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
+
+// Define the SVG components directly in the file
+const BookIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.featureSvg}>
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+  </svg>
+);
+
+const TerminalIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.featureSvg}>
+    <rect x="2" y="4" width="20" height="16" rx="2" fill="currentColor"/>
+    <path d="M5 8L9 12L5 16" stroke="#00FF00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M11 16H14" stroke="#00FF00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const BrainIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className={styles.featureSvg}>
+    <path d="M9 12a3 3 0 0 0 -3 -3h-1a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h1a3 3 0 0 0 3 -3v-4zm6 0a3 3 0 0 1 3 -3h1a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-1a3 3 0 0 1 -3 -3v-4zm-6 -9a6 6 0 0 0 -6 6v1a2 2 0 0 0 2 2h1a3 3 0 0 1 3 -3v-4zm6 0a6 6 0 0 1 6 6v1a2 2 0 0 1 -2 2h-1a3 3 0 0 0 -3 -3v-4z" />
+  </svg>
+);
+
 
 type FeatureItem = {
   title: string;
@@ -11,32 +35,32 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Comprehensive Chapters',
+    Svg: BookIcon,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Explore the fundamentals of physical AI, from kinematics and perception 
+        to the latest in humanoid locomotion.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Interactive Learning',
+    Svg: TerminalIcon,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Engage with interactive examples. Use the 'Ask the Book' feature to get 
+        answers powered by our backend RAG model.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Cutting-Edge Research',
+    Svg: BrainIcon,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Stay updated with the latest advancements in humanoid robotics and AI, 
+        including topics on human-robot interaction.
       </>
     ),
   },

@@ -1,2 +1,7 @@
-# Introduction
-This is an introductory chapter.
+---
+
+---
+
+# Welcome
+
+This is the default intro page.

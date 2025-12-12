@@ -22,11 +22,11 @@ const config: Config = {
 
   // Broken links handling
   onBrokenLinks: 'warn',              // Was 'throw', now 'warn'
-  onBrokenMarkdownLinks: 'warn',      // Added
 
   markdown: {
     hooks: {
       onBrokenMarkdownImages: 'warn',
+      onBrokenMarkdownLinks: 'warn',
     },
   },
 
