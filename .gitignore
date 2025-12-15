@@ -91,3 +91,22 @@ bundle/
 # Ignore misc
 .DS_Store
 Thumbs.db
+
+# Next.js
+.next/
+out/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+.venv/
+backend/src/__pycache__/
+
+# Secrets
+.env.local

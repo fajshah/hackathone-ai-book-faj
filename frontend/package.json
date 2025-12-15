@@ -1,0 +1,23 @@
+{
+  "name": "physical-ai-book-assistant",
+  "version": "1.0.0",
+  "description": "A Next.js application for the Physical AI & Humanoid Robotics Book Assistant",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@qdrant/js-client-rest": "^1.9.0",
+    "openai": "^4.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0"
+  }
+}

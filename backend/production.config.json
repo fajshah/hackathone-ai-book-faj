@@ -1,0 +1,42 @@
+{
+  "app": {
+    "name": "AI Textbook Backend",
+    "version": "1.0.0",
+    "description": "Backend API for the AI Robotics Textbook application"
+  },
+  "server": {
+    "port": 3001,
+    "host": "0.0.0.0",
+    "cors": {
+      "allowedOrigins": [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "https://your-frontend-domain.com"
+      ]
+    }
+  },
+  "database": {
+    "connectionTimeout": 30000,
+    "socketTimeout": 45000,
+    "poolSize": 10
+  },
+  "security": {
+    "rateLimit": {
+      "windowMs": 900000,
+      "max": 100,
+      "message": "Too many requests from this IP, please try again later."
+    },
+    "jwt": {
+      "expiresIn": "7d"
+    }
+  },
+  "logging": {
+    "level": "info",
+    "maxSize": "5m",
+    "maxFiles": 5
+  },
+  "api": {
+    "version": "v1",
+    "basePath": "/api"
+  }
+}
