@@ -1,11 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+import json
 from src.database import get_db
 from src.models.chunk import Chunk as ChunkModel
 from src.models.user import User
 from src.schemas.chunk import Chunk, ChunkCreate, ChunkUpdate
 from src.utils.auth import get_current_active_user
+from src.services.embeddings import embeddings_service
 
 router = APIRouter(tags=["chunks"])
 
@@ -43,11 +45,25 @@ async def create_chunk(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
 ):
-    """Create a new chunk"""
+    """Create a new chunk and add to Qdrant vector store"""
     db_chunk = ChunkModel(**chunk.model_dump())
     db.add(db_chunk)
     db.commit()
     db.refresh(db_chunk)
+
+    # Add to Qdrant vector store
+    try:
+        metadata = json.loads(db_chunk.metadata_json) if db_chunk.metadata_json else {}
+        embeddings_service.add_chunk(
+            chunk_id=db_chunk.id,
+            content=db_chunk.content,
+            metadata=metadata
+        )
+    except Exception as e:
+        # If adding to Qdrant fails, still return the chunk but log the error
+        import logging
+        logging.error(f"Failed to add chunk {db_chunk.id} to Qdrant: {str(e)}")
+
     return db_chunk
 
 
@@ -58,7 +74,7 @@ async def update_chunk(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
 ):
-    """Update a specific chunk"""
+    """Update a specific chunk and update in Qdrant vector store"""
     db_chunk = db.query(ChunkModel).filter(ChunkModel.id == chunk_id).first()
     if not db_chunk:
         raise HTTPException(
@@ -73,6 +89,20 @@ async def update_chunk(
 
     db.commit()
     db.refresh(db_chunk)
+
+    # Update in Qdrant vector store
+    try:
+        metadata = json.loads(db_chunk.metadata_json) if db_chunk.metadata_json else {}
+        embeddings_service.update_chunk(
+            chunk_id=db_chunk.id,
+            content=db_chunk.content,
+            metadata=metadata
+        )
+    except Exception as e:
+        # If updating in Qdrant fails, still return the chunk but log the error
+        import logging
+        logging.error(f"Failed to update chunk {db_chunk.id} in Qdrant: {str(e)}")
+
     return db_chunk
 
 
@@ -82,7 +112,7 @@ async def delete_chunk(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
 ):
-    """Delete a specific chunk"""
+    """Delete a specific chunk and remove from Qdrant vector store"""
     chunk = db.query(ChunkModel).filter(ChunkModel.id == chunk_id).first()
     if not chunk:
         raise HTTPException(
@@ -92,4 +122,13 @@ async def delete_chunk(
 
     db.delete(chunk)
     db.commit()
+
+    # Remove from Qdrant vector store
+    try:
+        embeddings_service.delete_chunk(chunk_id)
+    except Exception as e:
+        # If deleting from Qdrant fails, still return success but log the error
+        import logging
+        logging.error(f"Failed to delete chunk {chunk_id} from Qdrant: {str(e)}")
+
     return {"message": "Chunk deleted successfully"}

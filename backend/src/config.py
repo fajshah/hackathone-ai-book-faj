@@ -6,18 +6,36 @@ class Settings(BaseSettings):
     app_name: str = "Physical AI & Humanoid Robotics Textbook API"
     debug: bool = False
 
+    # Server Configuration
+    port: int = 8000
+    node_env: str = "development"
+
+    # Google API Configuration
+    google_api_key: str = ""
+
     # Database
     database_url: str
     neon_database_url: Optional[str] = None
+    mongodb_uri: Optional[str] = None
+
+    # JWT Configuration
+    jwt_secret: str = "your-super-secret-jwt-key-change-in-production"
+    jwt_expires_in: str = "7d"
+
+    # Rate Limiting
+    rate_limit_window_ms: str = "15 * 60 * 1000"  # 15 minutes
+    rate_limit_max_requests: int = 100
+
+    # CORS Configuration
+    allowed_origins: str = "http://localhost:3000,http://localhost:3001"
 
     # Qdrant
-    qdrant_host: str = "localhost"
-    qdrant_port: int = 6333
+    qdrant_url: Optional[str] = None
     qdrant_api_key: Optional[str] = None
     qdrant_collection_name: str = "textbook_chunks"
 
     # Authentication
-    secret_key: str
+    secret_key: str = "your-super-secret-jwt-key-change-in-production"  # Default value
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
     refresh_token_expire_days: int = 7

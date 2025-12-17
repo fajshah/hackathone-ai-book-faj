@@ -29,7 +29,7 @@ export default function AskTheBook() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:3001/api/conversations/ask', {
+      const response = await fetch('http://localhost:3001/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: message }),

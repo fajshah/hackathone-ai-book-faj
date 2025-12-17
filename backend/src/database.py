@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from src.config import settings
 
-# Use Neon database if available, otherwise use local database
+# Use Neon database as primary, fallback to local database if Neon is not available
 DATABASE_URL = settings.neon_database_url or settings.database_url
 
 engine = create_engine(DATABASE_URL)

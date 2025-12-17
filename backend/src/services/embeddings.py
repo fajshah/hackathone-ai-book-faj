@@ -11,11 +11,40 @@ logger = logging.getLogger(__name__)
 class EmbeddingsService:
     def __init__(self):
         # Initialize Qdrant client
-        self.client = QdrantClient(
-            host=settings.qdrant_host,
-            port=settings.qdrant_port,
-            api_key=settings.qdrant_api_key
-        )
+        if settings.qdrant_url and settings.qdrant_url.startswith('https://'):
+            # Use URL for cloud Qdrant instance
+            self.client = QdrantClient(
+                url=settings.qdrant_url,
+                api_key=settings.qdrant_api_key
+            )
+        else:
+            # Use host/port for local Qdrant instance
+            # Extract host and port from URL if in format http://host:port
+            import re
+            if settings.qdrant_url:
+                match = re.match(r'http://([^:]+):(\d+)', settings.qdrant_url)
+                if match:
+                    host = match.group(1)
+                    port = int(match.group(2))
+                    self.client = QdrantClient(
+                        host=host,
+                        port=port,
+                        api_key=settings.qdrant_api_key
+                    )
+                else:
+                    # Default to localhost if URL format is not recognized
+                    self.client = QdrantClient(
+                        host="localhost",
+                        port=6333,
+                        api_key=settings.qdrant_api_key
+                    )
+            else:
+                # Default to localhost
+                self.client = QdrantClient(
+                    host="localhost",
+                    port=6333,
+                    api_key=settings.qdrant_api_key
+                )
         self.collection_name = settings.qdrant_collection_name
         self.vector_size = 1536  # Default for OpenAI embeddings
         self._ensure_collection_exists()
