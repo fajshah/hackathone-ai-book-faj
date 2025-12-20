@@ -37,7 +37,7 @@ export default function AskTheBook() {
       // IMPORTANT: Update this URL when you deploy your backend to a public server
       const BACKEND_URL = (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')
                          ? '/api' // Use relative path for Vercel deployment (if backend is deployed with Vercel)
-                         : 'http://localhost:8000';
+                         : 'http://localhost:8001';
 
       const response = await fetch(`${BACKEND_URL}/ask`, {
         method: 'POST',
