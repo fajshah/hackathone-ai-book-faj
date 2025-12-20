@@ -4,14 +4,22 @@ from src.config import settings
 import openai
 import logging
 from openai import OpenAI
+import os
 
 logger = logging.getLogger(__name__)
 
 class RAGService:
     def __init__(self):
-        # Store API key but don't initialize client immediately to avoid quota issues on startup
-        self.api_key = settings.openai_api_key
-        self.model = settings.openai_model
+        # Determine which provider to use - prioritize OpenRouter if available
+        if settings.openrouter_api_key:
+            self.api_key = settings.openrouter_api_key
+            self.model = settings.openrouter_model
+            self.base_url = "https://openrouter.ai/api/v1"
+        else:
+            self.api_key = settings.openai_api_key
+            self.model = settings.openai_model
+            self.base_url = None  # Use default OpenAI base URL
+
         self.client = None
         # Don't initialize the client here to avoid quota issues during startup
 
@@ -52,14 +60,22 @@ class RAGService:
             # Initialize client only when needed and if not already initialized
             if self.client is None:
                 try:
-                    self.client = OpenAI(api_key=self.api_key)
+                    if self.base_url:
+                        # Use OpenRouter with custom base URL
+                        self.client = OpenAI(
+                            api_key=self.api_key,
+                            base_url=self.base_url
+                        )
+                    else:
+                        # Use OpenAI with default settings
+                        self.client = OpenAI(api_key=self.api_key)
                 except Exception as init_error:
-                    logger.error(f"Failed to initialize OpenAI client: {str(init_error)}")
-                    # Return a response based on context without calling OpenAI
+                    logger.error(f"Failed to initialize API client: {str(init_error)}")
+                    # Return a response based on context without calling API
                     context_text = "\n\n".join([chunk["content"] for chunk in context_chunks if chunk["content"]])
-                    return f"Based on the provided context: {context_text[:500]}... [Note: OpenAI client is not available, showing raw context]"
+                    return f"Based on the provided context: {context_text[:500]}... [Note: API client is not available, showing raw context]"
 
-            # Call OpenAI API to generate response using the client instance
+            # Call API to generate response using the client instance
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
