@@ -34,8 +34,9 @@ export default function AskTheBook() {
 
       // Use a configurable backend URL based on environment
       // For local development vs deployed environment
+      // IMPORTANT: Update this URL when you deploy your backend to a public server
       const BACKEND_URL = (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')
-                         ? 'https://your-deployed-backend-url.com' // Replace with your actual deployed backend URL
+                         ? 'https://your-deployed-backend.onrender.com' // Replace with your actual deployed backend URL
                          : 'http://localhost:8000';
 
       const response = await fetch(`${BACKEND_URL}/api/ask`, {

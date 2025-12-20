@@ -11,7 +11,9 @@
       "allowedOrigins": [
         "http://localhost:3000",
         "http://localhost:3001",
-        "https://your-frontend-domain.com"
+        "https://your-frontend-domain.com",
+        "https://hackathone-ai-book-faj-511b.vercel.app",
+        "https://hackathone-ai-book-faj.vercel.app"
       ]
     }
   },

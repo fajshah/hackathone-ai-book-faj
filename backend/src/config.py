@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     rate_limit_max_requests: int = 100
 
     # CORS Configuration
-    allowed_origins: str = "http://localhost:3000,http://localhost:3001"
+    allowed_origins: str = "http://localhost:3000,http://localhost:3001,https://hackathone-ai-book-faj-511b.vercel.app,https://hackathone-ai-book-faj.vercel.app"
 
     # Qdrant
     qdrant_url: Optional[str] = None
