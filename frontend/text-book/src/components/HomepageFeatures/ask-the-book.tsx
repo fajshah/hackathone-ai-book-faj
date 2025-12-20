@@ -36,10 +36,10 @@ export default function AskTheBook() {
       // For local development vs deployed environment
       // IMPORTANT: Update this URL when you deploy your backend to a public server
       const BACKEND_URL = (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')
-                         ? 'https://your-deployed-backend.onrender.com' // Replace with your actual deployed backend URL
+                         ? '/api' // Use relative path for Vercel deployment (if backend is deployed with Vercel)
                          : 'http://localhost:8000';
 
-      const response = await fetch(`${BACKEND_URL}/api/ask`, {
+      const response = await fetch(`${BACKEND_URL}/ask`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
