@@ -3,13 +3,17 @@ from src.services.embeddings import embeddings_service
 from src.config import settings
 import openai
 import logging
+from openai import OpenAI
 
 logger = logging.getLogger(__name__)
 
 class RAGService:
     def __init__(self):
-        # Initialize OpenAI client
-        openai.api_key = settings.openai_api_key
+        # Store API key but don't initialize client immediately to avoid quota issues on startup
+        self.api_key = settings.openai_api_key
+        self.model = settings.openai_model
+        self.client = None
+        # Don't initialize the client here to avoid quota issues during startup
 
     def query(self, question: str, context_chunks: List[Dict[str, Any]] = None, top_k: int = 5) -> str:
         """
@@ -45,9 +49,19 @@ class RAGService:
         """
 
         try:
-            # Call OpenAI API to generate response
-            response = openai.chat.completions.create(
-                model=settings.openai_model,
+            # Initialize client only when needed and if not already initialized
+            if self.client is None:
+                try:
+                    self.client = OpenAI(api_key=self.api_key)
+                except Exception as init_error:
+                    logger.error(f"Failed to initialize OpenAI client: {str(init_error)}")
+                    # Return a response based on context without calling OpenAI
+                    context_text = "\n\n".join([chunk["content"] for chunk in context_chunks if chunk["content"]])
+                    return f"Based on the provided context: {context_text[:500]}... [Note: OpenAI client is not available, showing raw context]"
+
+            # Call OpenAI API to generate response using the client instance
+            response = self.client.chat.completions.create(
+                model=self.model,
                 messages=[
                     {"role": "system", "content": "You are an AI assistant for the Physical AI & Humanoid Robotics textbook. Provide accurate, helpful answers based on the context provided. Be concise but thorough."},
                     {"role": "user", "content": prompt}
@@ -61,6 +75,10 @@ class RAGService:
 
         except Exception as e:
             logger.error(f"Error in RAG query: {str(e)}")
+            # Even if OpenAI fails, try to return context-based response
+            if context_chunks:
+                context_text = "\n\n".join([chunk["content"] for chunk in context_chunks if chunk["content"]])
+                return f"Based on the provided context: {context_text[:500]}... [Note: OpenAI API call failed, showing raw context]"
             return "Sorry, I encountered an error while processing your question. Please try again later."
 
     def query_with_sources(self, question: str, top_k: int = 5) -> Dict[str, Any]:

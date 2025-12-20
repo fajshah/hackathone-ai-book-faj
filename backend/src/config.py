@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     # Qdrant
     qdrant_url: Optional[str] = None
     qdrant_api_key: Optional[str] = None
-    qdrant_collection_name: str = "textbook_chunks"
+    qdrant_collection_name: str = "physical_ai"
 
     # Authentication
     secret_key: str = "your-super-secret-jwt-key-change-in-production"  # Default value
@@ -42,7 +42,10 @@ class Settings(BaseSettings):
 
     # OpenAI
     openai_api_key: str
-    openai_model: str = "gpt-4-turbo-preview"
+    openai_model: str = "gpt-4o"
+
+    # Qwen API Configuration
+    qwen_api_key: Optional[str] = None
 
     class Config:
         env_file = ".env"

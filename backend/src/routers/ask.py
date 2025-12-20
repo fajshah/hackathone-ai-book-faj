@@ -20,8 +20,7 @@ class AskResponse(BaseModel):
 @router.post("/ask", response_model=AskResponse)
 async def ask_question(
     query: AskQuery,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_active_user)
+    db: Session = Depends(get_db)
 ):
     """
     RAG-powered Q&A endpoint

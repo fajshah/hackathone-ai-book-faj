@@ -29,10 +29,16 @@ export default function AskTheBook() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:3001/api/ask', {
+      // Get token from localStorage (assuming it's stored after login)
+      const token = localStorage.getItem('access_token');
+
+      const response = await fetch('http://localhost:8000/api/ask', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: message }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token ? `Bearer ${token}` : '',
+        },
+        body: JSON.stringify({ question: message }),
       });
 
       const data = await response.json();
