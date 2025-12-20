@@ -64,6 +64,67 @@ h1, h2, h3 {
   background-color: var(--ifm-background-surface-color);
 }
 
+/* Mobile responsive styles for chat */
+@media (max-width: 768px) {
+  .chat-container {
+    height: 70vh;
+    max-height: 70vh;
+    margin: 10px;
+    border-radius: 4px;
+  }
+
+  .chat-message {
+    max-width: 90%;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .chat-input-form {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .chat-input {
+    border-radius: 4px;
+  }
+
+  .chat-send-button {
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+
+  .empty-chat-state h3 {
+    font-size: 1.2rem;
+  }
+
+  .empty-chat-state p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-container {
+    height: 65vh;
+    max-height: 65vh;
+    margin: 5px;
+  }
+
+  .chat-message {
+    max-width: 95%;
+    padding: 0.4rem;
+    font-size: 0.85rem;
+  }
+
+  .chat-input {
+    font-size: 0.9rem;
+  }
+
+  .chat-send-button {
+    font-size: 0.9rem;
+  }
+}
+
 .chat-window {
   flex: 1;
   overflow-y: auto;
