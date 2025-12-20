@@ -32,7 +32,14 @@ export default function AskTheBook() {
       // Get token from localStorage (assuming it's stored after login)
       const token = localStorage.getItem('access_token');
 
-      const response = await fetch('http://localhost:8000/api/ask', {
+      // Use a configurable backend URL
+      // In production, this should be set to your deployed backend URL
+      const BACKEND_URL = process.env.BACKEND_URL ||
+                         ((typeof window !== 'undefined' && window.location.hostname !== 'localhost')
+                         ? 'https://your-deployed-backend-url.com' // Replace with your actual deployed backend URL
+                         : 'http://localhost:8000');
+
+      const response = await fetch(`${BACKEND_URL}/api/ask`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
