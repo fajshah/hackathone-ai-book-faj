@@ -46,7 +46,7 @@ class Settings(BaseSettings):
 
     # OpenRouter Configuration (alternative to OpenAI)
     openrouter_api_key: Optional[str] = None
-    openrouter_model: str = "openai/gpt-4o"
+    openrouter_model: str = "openai/gpt-4o"  # Default, but can be overridden
 
     # Qwen API Configuration
     qwen_api_key: Optional[str] = None
