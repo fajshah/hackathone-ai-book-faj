@@ -39,7 +39,9 @@ export default function AskTheBook() {
                          ? '/api' // Use relative path for Vercel deployment (if backend is deployed with Vercel)
                          : 'http://localhost:8001';
 
-      const response = await fetch(`${BACKEND_URL}/ask`, {
+      // For local development, use full API path; for deployed, use relative path
+      const apiPath = BACKEND_URL.startsWith('http://localhost') ? '/api/ask' : '/ask';
+      const response = await fetch(`${BACKEND_URL}${apiPath}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
