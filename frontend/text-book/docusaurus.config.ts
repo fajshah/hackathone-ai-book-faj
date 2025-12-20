@@ -63,9 +63,6 @@ const config: Config = {
     ],
   ],
 
-  customFields: {
-    backendUrl: process.env.BACKEND_URL || 'https://your-deployed-backend-url.com', // Replace with your actual backend URL
-  },
   themeConfig: {
     image: 'img/docusaurus-social-card.jpg',
     colorMode: {
