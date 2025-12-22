@@ -20,18 +20,22 @@ class AskResponse(BaseModel):
 @router.post("/ask", response_model=AskResponse)
 async def ask_question(
     query: AskQuery,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
-    RAG-powered Q&A endpoint
+    RAG-powered Q&A endpoint with personalization
     Ask a question about the textbook content and get an AI-generated answer
     """
     try:
         # Process the RAG query
         result = rag_service.query_with_sources(query.question, query.top_k)
 
+        # Personalize the answer based on user profile
+        personalized_answer = personalize_answer(result["answer"], current_user)
+
         return AskResponse(
-            answer=result["answer"],
+            answer=personalized_answer,
             sources=result["sources"]
         )
     except Exception as e:
@@ -39,6 +43,205 @@ async def ask_question(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error processing question: {str(e)}"
         )
+
+
+@router.post("/ask/public", response_model=AskResponse)
+async def ask_question_public(
+    query: AskQuery,
+    db: Session = Depends(get_db)
+):
+    """
+    Public RAG-powered Q&A endpoint without authentication
+    Ask a question about the textbook content and get an AI-generated answer
+    Personalization will use default values for unauthenticated users
+    """
+    try:
+        # Process the RAG query
+        result = rag_service.query_with_sources(query.question, query.top_k)
+
+        # Create a mock user with default values for personalization
+        from unittest.mock import Mock
+        mock_user = Mock()
+        mock_user.software_experience = "beginner"
+        mock_user.hardware_knowledge = "none"
+        mock_user.interests = ["AI", "Robotics"]
+
+        # Personalize the answer based on default profile
+        personalized_answer = personalize_answer(result["answer"], mock_user)
+
+        return AskResponse(
+            answer=personalized_answer,
+            sources=result["sources"]
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error processing question: {str(e)}"
+        )
+
+
+def personalize_answer(answer: str, user: User) -> str:
+    """
+    Personalize the answer based on user's profile
+    """
+    import re
+
+    # Get user profile information
+    experience_level = user.software_experience or "beginner"
+    hardware_knowledge = user.hardware_knowledge or "none"
+    interests = user.interests or []
+
+    # Personalize based on experience level
+    if experience_level == "beginner":
+        # Add more explanations and basic concepts for beginners
+        answer = add_beginner_explanations(answer)
+    elif experience_level == "intermediate":
+        # Add some advanced concepts while keeping it accessible
+        answer = add_intermediate_context(answer)
+    elif experience_level == "advanced":
+        # Include more technical depth and research context
+        answer = add_advanced_context(answer)
+
+    # Add hardware-specific context if relevant
+    if hardware_knowledge in ["electronics", "robotics", "advanced"]:
+        answer = add_hardware_context(answer)
+
+    # Add interest-specific context
+    if "AI" in interests:
+        answer = add_ai_context(answer)
+    if "Robotics" in interests:
+        answer = add_robotics_context(answer)
+    if "Data" in interests:
+        answer = add_data_context(answer)
+
+    return answer
+
+
+def add_beginner_explanations(answer: str) -> str:
+    """
+    Add beginner-friendly explanations to the answer
+    """
+    # Add basic definitions and simpler explanations
+    beginner_additions = [
+        "\n\n**For beginners:** This concept might seem complex at first, but think of it as...",
+        "\n\n**Key takeaway for beginners:** Focus on understanding the fundamental principle first before moving to advanced applications.",
+        "\n\n**Beginner tip:** Try implementing a simple version of this concept to build intuition."
+    ]
+
+    # Add beginner-friendly additions to the answer
+    import random
+    if random.random() > 0.5:  # Add with 50% probability
+        answer += beginner_additions[0]
+
+    return answer
+
+
+def add_intermediate_context(answer: str) -> str:
+    """
+    Add intermediate-level context to the answer
+    """
+    # Add more detailed explanations and connections
+    intermediate_additions = [
+        "\n\n**Implementation note:** For practical applications, consider...",
+        "\n\n**Advanced consideration:** More sophisticated approaches might involve...",
+        "\n\n**Practical tip:** When implementing this, pay attention to..."
+    ]
+
+    import random
+    if random.random() > 0.5:  # Add with 50% probability
+        answer += intermediate_additions[0]
+
+    return answer
+
+
+def add_advanced_context(answer: str) -> str:
+    """
+    Add advanced-level context to the answer
+    """
+    # Add research context, advanced techniques, and cutting-edge approaches
+    advanced_additions = [
+        "\n\n**Research perspective:** Current research in this area focuses on...",
+        "\n\n**Advanced implementation:** State-of-the-art approaches use...",
+        "\n\n**Cutting-edge note:** Recent papers have explored..."
+    ]
+
+    import random
+    if random.random() > 0.5:  # Add with 50% probability
+        answer += advanced_additions[0]
+
+    return answer
+
+
+def add_hardware_context(answer: str) -> str:
+    """
+    Add hardware-specific context to the answer
+    """
+    if any(keyword in answer.lower() for keyword in ["algorithm", "model", "system", "process"]):
+        hardware_additions = [
+            "\n\n**Hardware consideration:** This algorithm's performance can be significantly improved with specialized hardware like GPUs or TPUs.",
+            "\n\n**Implementation note:** Consider the hardware constraints when deploying this system.",
+            "\n\n**Hardware tip:** For real-time applications, optimize for your target hardware architecture."
+        ]
+
+        import random
+        if random.random() > 0.7:  # Add with 30% probability
+            answer += hardware_additions[0]
+
+    return answer
+
+
+def add_ai_context(answer: str) -> str:
+    """
+    Add AI-specific context to the answer
+    """
+    if any(keyword in answer.lower() for keyword in ["algorithm", "model", "learning", "data", "system"]):
+        ai_additions = [
+            "\n\n**AI perspective:** This approach is commonly used in machine learning applications.",
+            "\n\n**ML connection:** This concept is fundamental to understanding modern AI systems.",
+            "\n\n**AI application:** This technique has shown great success in various AI domains."
+        ]
+
+        import random
+        if random.random() > 0.7:  # Add with 30% probability
+            answer += ai_additions[0]
+
+    return answer
+
+
+def add_robotics_context(answer: str) -> str:
+    """
+    Add robotics-specific context to the answer
+    """
+    if any(keyword in answer.lower() for keyword in ["system", "control", "sensor", "algorithm", "model"]):
+        robotics_additions = [
+            "\n\n**Robotics application:** This concept is crucial for autonomous robot systems.",
+            "\n\n**Robotic implementation:** In robotics, this would typically involve real-time processing.",
+            "\n\n**Robotics perspective:** This approach is commonly used in robotic control systems."
+        ]
+
+        import random
+        if random.random() > 0.7:  # Add with 30% probability
+            answer += robotics_additions[0]
+
+    return answer
+
+
+def add_data_context(answer: str) -> str:
+    """
+    Add data-specific context to the answer
+    """
+    if any(keyword in answer.lower() for keyword in ["model", "algorithm", "system", "process", "analysis"]):
+        data_additions = [
+            "\n\n**Data science note:** This method is particularly effective with large datasets.",
+            "\n\n**Data perspective:** Consider the data quality and preprocessing requirements.",
+            "\n\n**Statistical consideration:** The effectiveness depends on the underlying data distribution."
+        ]
+
+        import random
+        if random.random() > 0.7:  # Add with 30% probability
+            answer += data_additions[0]
+
+    return answer
 
 
 @router.post("/ask/advanced")

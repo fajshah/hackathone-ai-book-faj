@@ -29,23 +29,20 @@ export default function AskTheBook() {
     setError('');
 
     try {
-      // Get token from localStorage (assuming it's stored after login)
-      const token = localStorage.getItem('access_token');
-
       // Use a configurable backend URL based on environment
       // For local development vs deployed environment
       // IMPORTANT: Update this URL when you deploy your backend to a public server
       const BACKEND_URL = (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')
                          ? '/api' // Use relative path for Vercel deployment (if backend is deployed with Vercel)
-                         : 'http://localhost:8001';
+                         : 'http://localhost:8000';
 
       // For local development, use full API path; for deployed, use relative path
-      const apiPath = BACKEND_URL.startsWith('http://localhost') ? '/api/ask' : '/ask';
+      // Use the public endpoint that doesn't require authentication
+      const apiPath = BACKEND_URL.startsWith('http://localhost') ? '/api/ask/public' : '/ask/public';
       const response = await fetch(`${BACKEND_URL}${apiPath}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': token ? `Bearer ${token}` : '',
         },
         body: JSON.stringify({ question: message }),
       });

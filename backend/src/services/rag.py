@@ -62,13 +62,52 @@ class RAGService:
                 try:
                     if self.base_url:
                         # Use OpenRouter with custom base URL
-                        self.client = OpenAI(
-                            api_key=self.api_key,
-                            base_url=self.base_url
-                        )
+                        # Create client without passing proxies parameter to avoid compatibility issues
+                        import os
+                        # Temporarily clear proxy environment variables that might cause issues
+                        original_http_proxy = os.environ.get('HTTP_PROXY')
+                        original_https_proxy = os.environ.get('HTTPS_PROXY')
+
+                        # Remove proxy settings that might cause the 'proxies' parameter issue
+                        os.environ.pop('HTTP_PROXY', None)
+                        os.environ.pop('HTTPS_PROXY', None)
+
+                        try:
+                            self.client = OpenAI(
+                                api_key=self.api_key,
+                                base_url=self.base_url
+                            )
+                        finally:
+                            # Restore original proxy settings
+                            if original_http_proxy:
+                                os.environ['HTTP_PROXY'] = original_http_proxy
+                            if original_https_proxy:
+                                os.environ['HTTPS_PROXY'] = original_https_proxy
                     else:
                         # Use OpenAI with default settings
                         self.client = OpenAI(api_key=self.api_key)
+                except TypeError as te:
+                    if 'proxies' in str(te):
+                        # Handle the specific proxies parameter compatibility issue
+                        logger.error(f"Proxy-related error initializing API client: {str(te)}")
+                        # Create client with http_client parameter to avoid proxy issues
+                        import httpx
+                        # Create a client without proxy configuration
+                        http_client = httpx.Client()
+                        if self.base_url:
+                            self.client = OpenAI(
+                                api_key=self.api_key,
+                                base_url=self.base_url,
+                                http_client=http_client
+                            )
+                        else:
+                            self.client = OpenAI(
+                                api_key=self.api_key,
+                                http_client=http_client
+                            )
+                    else:
+                        logger.error(f"Type error initializing API client: {str(te)}")
+                        raise
                 except Exception as init_error:
                     logger.error(f"Failed to initialize API client: {str(init_error)}")
                     # Return a response based on context without calling API
