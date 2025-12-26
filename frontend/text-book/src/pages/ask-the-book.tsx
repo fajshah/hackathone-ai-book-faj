@@ -1,7 +1,15 @@
 import React from 'react';
-import AskTheBookComponent from '../components/HomepageFeatures/ask-the-book';
+import Layout from '@theme/Layout';
+import AskTheBookComponent from '../components/AskTheBook/AskTheBookComponent';
 
 export default function AskTheBook() {
-  return <AskTheBookComponent />;
+  return (
+    <Layout
+      title="Ask the Book"
+      description="Ask questions about the Physical AI & Humanoid Robotics textbook">
+      <main>
+        <AskTheBookComponent />
+      </main>
+    </Layout>
+  );
 }
-

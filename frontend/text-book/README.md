@@ -1,41 +1,31 @@
-# Website
+# Physical AI & Humanoid Robotics Documentation
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+This is a Docusaurus documentation site for the Physical AI & Humanoid Robotics textbook. This site is strictly for documentation and content delivery only.
 
-## Installation
-
-```bash
-yarn
-```
+## Architecture Constraint
+- **Documentation Only**: This site must remain purely for documentation
+- **No Authentication**: Authentication functionality is completely separate
+- **Preserve Classic UI**: Default Docusaurus theme must be maintained
+- **Content Focus**: Only documentation-related features are allowed
 
 ## Local Development
 
 ```bash
-yarn start
+npm run start
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+This command starts a local development server at http://localhost:3000.
 
 ## Build
 
 ```bash
-yarn build
+npm run build
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+This command generates static content into the `build` directory.
 
-## Deployment
-
-Using SSH:
-
-```bash
-USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+## Important Notes
+- This site is completely separated from authentication systems
+- All user authentication happens in a separate backend service
+- This site should never contain auth components or UI
+- Maintain the default Docusaurus classic theme styling

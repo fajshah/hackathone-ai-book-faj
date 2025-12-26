@@ -1,78 +1,88 @@
-import type {ReactNode} from 'react';
 import React from 'react';
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
 
-// Define the SVG components directly in the file
-const BookIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.featureSvg}>
-    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-  </svg>
-);
-
-const TerminalIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.featureSvg}>
-    <rect x="2" y="4" width="20" height="16" rx="2" fill="currentColor"/>
-    <path d="M5 8L9 12L5 16" stroke="#00FF00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M11 16H14" stroke="#00FF00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const BrainIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className={styles.featureSvg}>
-    <path d="M9 12a3 3 0 0 0 -3 -3h-1a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h1a3 3 0 0 0 3 -3v-4zm6 0a3 3 0 0 1 3 -3h1a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-1a3 3 0 0 1 -3 -3v-4zm-6 -9a6 6 0 0 0 -6 6v1a2 2 0 0 0 2 2h1a3 3 0 0 1 3 -3v-4zm6 0a6 6 0 0 1 6 6v1a2 2 0 0 1 -2 2h-1a3 3 0 0 0 -3 -3v-4z" />
-  </svg>
-);
-
-
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
-  description: ReactNode;
+  description: JSX.Element;
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Comprehensive Chapters',
-    Svg: BookIcon,
+    title: 'Interactive Book',
     description: (
       <>
-        Explore the fundamentals of physical AI, from kinematics and perception 
-        to the latest in humanoid locomotion.
+        Explore the Physical AI & Humanoid Robotics textbook with interactive features,
+        real-time examples, and hands-on learning experiences.
       </>
     ),
   },
   {
-    title: 'Interactive Learning',
-    Svg: TerminalIcon,
+    title: 'AI-Powered Learning',
     description: (
       <>
-        Engage with interactive examples. Use the 'Ask the Book' feature to get 
-        answers powered by our backend RAG model.
+        Get personalized answers to your questions about robotics, AI, and humanoid systems
+        using advanced AI technology.
       </>
     ),
   },
   {
-    title: 'Cutting-Edge Research',
-    Svg: BrainIcon,
+    title: 'Robotics Concepts',
     description: (
       <>
-        Stay updated with the latest advancements in humanoid robotics and AI, 
-        including topics on human-robot interaction.
+        Master complex robotics concepts through visual explanations,
+        practical examples, and real-world applications.
       </>
     ),
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({title, description}: FeatureItem) {
+  // Define images based on the title
+  const getImage = (title: string) => {
+    switch(title) {
+      case 'Interactive Book':
+        return (
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231e3a8a'%3E%3Cpath d='M12 2l-7 4v16l7-4 7 4V6l-7-4zM12 4.15L19 8v12l-7-4-7 4V8l7-3.85z'/%3E%3Cpath d='M9 10h6v2H9v-2zm0 4h6v2H9v-2z'/%3E%3C/svg%3E"
+            alt="Interactive Book"
+            className={styles.featureSvg}
+          />
+        );
+      case 'AI-Powered Learning':
+        return (
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231e3a8a'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E"
+            alt="AI Learning"
+            className={styles.featureSvg}
+          />
+        );
+      case 'Robotics Concepts':
+        return (
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231e3a8a'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2V7zm0 8h2v2h-2v-2z'/%3E%3C/svg%3E"
+            alt="Robotics"
+            className={styles.featureSvg}
+          />
+        );
+      default:
+        return (
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231e3a8a'%3E%3Cpath d='M12 2l-7 4v16l7-4 7 4V6l-7-4z'/%3E%3C/svg%3E"
+            alt="Default"
+            className={styles.featureSvg}
+          />
+        );
+    }
+  };
+
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
+    <div className={clsx('col col--4', styles.feature)}>
       <div className="text--center padding-horiz--md">
+        <div className="text--center">
+          {getImage(title)}
+        </div>
         <Heading as="h3">{title}</Heading>
         <p>{description}</p>
       </div>
@@ -80,7 +90,7 @@ function Feature({title, Svg, description}: FeatureItem) {
   );
 }
 
-export default function HomepageFeatures(): ReactNode {
+export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">

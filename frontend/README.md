@@ -2,6 +2,15 @@
 
 A Next.js application that allows users to ask questions about the Physical AI & Humanoid Robotics textbook and get relevant answers based on the content stored in Qdrant vector database.
 
+## Architecture Note
+
+This repository contains multiple separate applications:
+1. **Documentation Site**: Docusaurus site in `frontend/text-book/` directory (http://localhost:3000) - **CONTENT ONLY**
+2. **Backend Service**: Authentication and API in `backend/` directory (http://localhost:8001)
+3. **Frontend App**: Next.js RAG interface in `frontend/` directory
+
+**CRITICAL**: The documentation site (Docusaurus) is strictly for content delivery and must remain separated from authentication functionality.
+
 ## Features
 
 - Interactive chat interface for asking questions
@@ -34,6 +43,16 @@ npm run dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Documentation Site Setup
+
+To run the Docusaurus documentation site:
+```bash
+cd frontend/text-book
+npm run start
+```
+
+The documentation site will be available at http://localhost:3000
 
 ## Deployment to Vercel
 
@@ -72,6 +91,7 @@ vercel --prod
 
 ```
 frontend/
+├── text-book/            # Docusaurus documentation site (CONTENT ONLY)
 ├── pages/
 │   ├── index.js          # Main application page
 │   └── api/
@@ -97,6 +117,14 @@ frontend/
 - Qdrant for vector similarity search
 - OpenAI for text embeddings
 - Vercel for deployment
+- Docusaurus for documentation (in text-book/)
+
+## Architecture Constraints
+
+- **Documentation Site**: The Docusaurus site in `frontend/text-book/` is for content only
+- **No Auth Integration**: Authentication functionality is completely separated
+- **Preserve Classic UI**: Docusaurus maintains default theme styling
+- **Content Focus**: Documentation site should never contain auth components
 
 ## Notes
 
