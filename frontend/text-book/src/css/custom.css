@@ -1,40 +1,54 @@
 :root {
-  --ifm-color-primary: #e945c5; /* Oxford Blue */
-  --ifm-color-primary-dark: #d140be;
+  --ifm-color-primary: #ec4899; /* pink */
+  --ifm-color-primary-dark: #db2777;
+  --ifm-color-primary-light: #f472b6;
   --ifm-color-primary-darker: #e945c5;
-  --ifm-color-primary-darkest: #e945c5;
+  --ifm-color-primary-darkest: #d140be;
 
-  --ifm-color-primary-light: #2f6ab3;
-  --ifm-color-primary-lighter: #4a82c8;
-  --ifm-color-primary-lightest: #6fa0de;
+  /* Additional color variables */
+  --ifm-color-secondary: #260fa3; /* purple */
 
   /* Backgrounds */
-  --ifm-background-color: #f3d0f3; /* Soft English grey */
+  --ifm-background-color: #ffe5f3; /* Light pink background */
   --ifm-background-surface-color: #ffffff;
 
   /* Text Colors */
-  --ifm-font-color-base: #1f2937; /* Dark text */
-  --ifm-font-color-secondary: #4b5563; /* Light text */
+  --ifm-font-color-base: #1e3a8a; /* Dark blue text */
+  --ifm-font-color-secondary: #1e3a8a; /* Dark blue text */
+  --ifm-heading-color: #1e3a8a; /* Dark blue headings */
 
   /* Accents */
   --ifm-color-info: #c5ecec; /* Pastel English Blue */
+  --ifm-code-font-size: 95%;
+}
+
+/* You can override the default Docusaurus styling here. */
+.docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+html[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 /* Navbar */
 .navbar {
-  background-color: #ffffff !important;
+  background-color: #ffe5f3 !important;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 /* Footer */
 .footer {
-  background-color: #e945c5 !important;
-  color: #bf12c5 !important;
+  background-color: #ec4899 !important;
+  color: #1e3a8a !important;
 }
 
 /* Headings */
 h1, h2, h3 {
-  color: #3810c9 !important;
+  color: #1e3a8a !important;
 }
 
 /* Code Blocks */
@@ -47,223 +61,59 @@ h1, h2, h3 {
 
 /* Cards */
 .card {
-  background: #ecc9c9 !important;
-  border: 1px solid #d6d6f3 !important;
+  background: #ffe5f3 !important;
+  border: 1px solid #f8c6e0 !important;
   border-radius: 12px !important;
 }
 
-/* Chat Interface Styles */
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  height: 80vh;
-  max-height: 80vh;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: 8px;
-  overflow: hidden;
-  background-color: var(--ifm-background-surface-color);
+/* Features section styling */
+.features {
+  padding: 4rem 0;
+  background-color: #ffe5f3;
 }
 
-/* Mobile responsive styles for chat */
-@media (max-width: 768px) {
-  .chat-container {
-    height: 70vh;
-    max-height: 70vh;
-    margin: 10px;
-    border-radius: 4px;
-  }
-
-  .chat-message {
-    max-width: 90%;
-    padding: 0.5rem;
-    font-size: 0.9rem;
-  }
-
-  .chat-input-form {
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.75rem;
-  }
-
-  .chat-input {
-    border-radius: 4px;
-  }
-
-  .chat-send-button {
-    border-radius: 4px;
-    padding: 0.5rem;
-  }
-
-  .empty-chat-state h3 {
-    font-size: 1.2rem;
-  }
-
-  .empty-chat-state p {
-    font-size: 0.9rem;
-  }
+.feature {
+  padding: 2rem;
+  border-radius: 0.5rem;
+  background-color: #ffe5f3; /* Light pink background */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-@media (max-width: 480px) {
-  .chat-container {
-    height: 65vh;
-    max-height: 65vh;
-    margin: 5px;
-  }
-
-  .chat-message {
-    max-width: 95%;
-    padding: 0.4rem;
-    font-size: 0.85rem;
-  }
-
-  .chat-input {
-    font-size: 0.9rem;
-  }
-
-  .chat-send-button {
-    font-size: 0.9rem;
-  }
+.feature:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  background-color: #fdd1e8; /* Slightly darker pink on hover */
 }
 
-.chat-window {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1rem;
-  background-color: #f9f9f9;
-}
-
-.chat-messages-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.empty-chat-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  text-align: center;
-  color: var(--ifm-font-color-secondary);
-}
-
-.empty-chat-state h3 {
-  margin-bottom: 1rem;
-  color: var(--ifm-color-primary);
-}
-
-.chat-message {
-  margin-bottom: 1rem;
-  padding: 0.75rem;
-  border-radius: 8px;
-  max-width: 80%;
-  word-wrap: break-word;
-}
-
-.chat-message-user {
-  align-self: flex-end;
-  background-color: var(--ifm-color-primary);
+/* Hero gradient */
+.hero--primary {
+  background: linear-gradient(
+    135deg,
+    #a855f7, /* purple */
+    #ec4899  /* pink */
+  ) !important;
   color: white;
-  margin-left: auto;
 }
 
-.chat-message-assistant {
-  align-self: flex-start;
-  background-color: #e9ecef;
-  color: var(--ifm-font-color-base);
-}
-
-.chat-message-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.25rem;
-  font-size: 0.85rem;
-}
-
-.chat-timestamp {
-  font-size: 0.75rem;
-  opacity: 0.7;
-}
-
-.chat-message-content {
-  line-height: 1.4;
-}
-
-.chat-input-form {
-  display: flex;
-  padding: 1rem;
-  background-color: var(--ifm-background-surface-color);
-  border-top: 1px solid var(--ifm-color-emphasis-300);
-}
-
-.chat-input {
-  flex: 1;
-  padding: 0.75rem;
-  border: 1px solid var(--ifm-color-emphasis-300);
-  border-radius: 4px 0 0 4px;
-  font-size: 1rem;
-}
-
-.chat-input:focus {
-  outline: none;
-  border-color: var(--ifm-color-primary);
-  box-shadow: 0 0 0 2px rgba(233, 69, 197, 0.2);
-}
-
-.chat-send-button {
-  padding: 0.75rem 1rem;
-  background-color: var(--ifm-color-primary);
+.hero__title {
   color: white;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.hero__subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.2rem;
+}
+
+.button--secondary {
+  background-color: white;
+  color: #ec4899;
   border: none;
-  border-radius: 0 4px 4px 0;
-  cursor: pointer;
-  font-size: 1rem;
 }
 
-.chat-send-button:hover:not(:disabled) {
-  background-color: var(--ifm-color-primary-dark);
+.button--secondary:hover {
+  background-color: #f8f9fa;
+  color: #db2777;
 }
-
-.chat-send-button:disabled {
-  background-color: var(--ifm-color-emphasis-200);
-  cursor: not-allowed;
-}
-
-.typing-indicator {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.typing-dots {
-  display: flex;
-  align-items: center;
-  margin-right: 0.5rem;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  background-color: var(--ifm-color-primary);
-  border-radius: 50%;
-  margin: 0 2px;
-  animation: typing 1.4s infinite ease-in-out;
-}
-
-.dot:nth-child(1) { animation-delay: 0s; }
-.dot:nth-child(2) { animation-delay: 0.2s; }
-.dot:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes typing {
-  0%, 60%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-5px); }
-}
-
-.typing-text {
-  color: var(--ifm-font-color-secondary);
-  font-size: 0.9rem;
-}
-
