@@ -53,8 +53,21 @@ const AskTheBookComponent: React.FC = () => {
       });
 
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.detail || `API request failed with status ${res.status}`);
+        // Try to get error details even if response is not JSON
+        let errorDetails = `API request failed with status ${res.status}`;
+        try {
+          const errorData = await res.json();
+          errorDetails = errorData.detail || errorDetails;
+        } catch (parseError) {
+          // If response is not JSON, try to get text
+          try {
+            const errorText = await res.text();
+            errorDetails += ` - ${errorText}`;
+          } catch (textError) {
+            errorDetails += ` - Could not parse error response`;
+          }
+        }
+        throw new Error(errorDetails);
       }
 
       const data = await res.json();
