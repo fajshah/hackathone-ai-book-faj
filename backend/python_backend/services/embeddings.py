@@ -172,6 +172,7 @@ class EmbeddingsService:
         try:
             query_embedding = self.create_embedding(query)
 
+            # Updated search method for deployed environment
             results = self.client.search(
                 collection_name=self.collection_name,
                 query_vector=query_embedding,
