@@ -11,6 +11,11 @@ logger = logging.getLogger(__name__)
 class EmbeddingsService:
     def __init__(self):
         try:
+            # Log startup information for debugging
+            logger.info(f"Initializing Qdrant client...")
+            logger.info(f"QDRANT_URL: {settings.qdrant_url}")
+            logger.info(f"QDRANT_COLLECTION_NAME: {settings.qdrant_collection_name}")
+
             # Initialize Qdrant client
             if settings.qdrant_url and settings.qdrant_url.startswith('https://'):
                 # Use URL for cloud Qdrant instance
@@ -46,15 +51,30 @@ class EmbeddingsService:
                         port=6333,
                         api_key=settings.qdrant_api_key
                     )
+
+            # Verify the client has the required methods
+            if not hasattr(self.client, 'search'):
+                logger.error("Qdrant client does not have 'search' method")
+                raise AttributeError("Qdrant client does not support required 'search' method")
+
             self.collection_name = settings.qdrant_collection_name
             self.vector_size = 1536  # Default for OpenAI embeddings
+
+            # Ensure collection exists and test connection
             self._ensure_collection_exists()
+
+            # Test connection by counting points
+            try:
+                count = self.client.count(collection_name=self.collection_name)
+                logger.info(f"Qdrant connection successful! Collection '{self.collection_name}' has {count.count} points")
+            except Exception as e:
+                logger.error(f"Failed to connect to Qdrant collection: {str(e)}")
+                raise
+
         except Exception as e:
-            logger.error(f"Error initializing Qdrant client: {str(e)}")
-            # Create a mock client that returns empty results
-            self.client = None
-            self.collection_name = settings.qdrant_collection_name
-            self.vector_size = 1536
+            logger.error(f"Critical error initializing Qdrant client: {str(e)}")
+            # Fail fast - do not allow app to run without vector DB
+            raise RuntimeError(f"Qdrant initialization failed: {str(e)}")
 
     def _ensure_collection_exists(self):
         """Ensure the collection exists in Qdrant"""
@@ -275,29 +295,10 @@ class EmbeddingsService:
 
                 logger.info(f"Deleted {len(point_ids)} chunks by metadata filter")
 
-# Create a global instance with error handling
+# Create a global instance - fail fast if Qdrant is not available
 try:
     embeddings_service = EmbeddingsService()
 except Exception as e:
-    logger.error(f"Failed to initialize embeddings service: {str(e)}")
-    # Create a mock service that handles requests gracefully
-    class MockEmbeddingsService:
-        def search_similar(self, query: str, limit: int = 5):
-            return []
-
-        def add_chunk(self, chunk_id: int, content: str, metadata=None):
-            pass
-
-        def add_chunks(self, chunks_data):
-            pass
-
-        def update_chunk(self, chunk_id: int, content: str, metadata=None):
-            pass
-
-        def delete_chunk(self, chunk_id: int):
-            pass
-
-        def delete_chunks_by_metadata(self, metadata_filter):
-            pass
-
-    embeddings_service = MockEmbeddingsService()
+    logger.error(f"Critical: Failed to initialize embeddings service: {str(e)}")
+    # Don't create a mock service - fail fast to ensure vector DB is available
+    raise RuntimeError(f"Critical: Embeddings service failed to initialize: {str(e)}")

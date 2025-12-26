@@ -47,3 +47,24 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
+@app.get("/health/qdrant")
+async def qdrant_health_check():
+    from services.embeddings import embeddings_service
+    try:
+        # Test Qdrant connection by counting points
+        count = embeddings_service.client.count(collection_name=embeddings_service.collection_name)
+        return {
+            "status": "healthy",
+            "connection": True,
+            "collection_exists": True,
+            "points_count": count.count,
+            "collection_name": embeddings_service.collection_name
+        }
+    except Exception as e:
+        return {
+            "status": "unhealthy",
+            "connection": False,
+            "error": str(e),
+            "collection_name": embeddings_service.collection_name if hasattr(embeddings_service, 'collection_name') else "unknown"
+        }
