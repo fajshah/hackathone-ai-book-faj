@@ -55,16 +55,13 @@ async def qdrant_health_check():
         # Test Qdrant connection by counting points
         count = embeddings_service.client.count(collection_name=embeddings_service.collection_name)
         return {
-            "status": "healthy",
-            "connection": True,
-            "collection_exists": True,
-            "points_count": count.count,
-            "collection_name": embeddings_service.collection_name
+            "connected": True,
+            "collection": embeddings_service.collection_name,
+            "points": {"count": count.count}
         }
     except Exception as e:
-        return {
-            "status": "unhealthy",
-            "connection": False,
-            "error": str(e),
-            "collection_name": embeddings_service.collection_name if hasattr(embeddings_service, 'collection_name') else "unknown"
-        }
+        from fastapi.responses import JSONResponse
+        return JSONResponse(
+            {"connected": False, "error": str(e)},
+            status_code=500
+        )

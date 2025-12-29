@@ -52,12 +52,8 @@ class RAGService:
                 content = msg.get("content", "")
                 conversation_history += f"{role.capitalize()}: {content}\n"
 
-        # Prepare the prompt for OpenAI
+        # Prepare the prompt for OpenAI - provide context and question separately
         prompt = f"""
-        You are an AI assistant for the Physical AI & Humanoid Robotics textbook.
-        Use the following context to answer the question. If the context doesn't contain
-        enough information, say so clearly.
-
         {conversation_history}
 
         Context:
@@ -65,7 +61,7 @@ class RAGService:
 
         Question: {question}
 
-        Answer:
+        Provide a clear, concise answer based on the context above. Do not include the context chunks in your response, only provide the synthesized answer to the question.
         """
 
         try:
@@ -130,7 +126,41 @@ class RAGService:
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are an AI assistant for the Physical AI & Humanoid Robotics textbook. Provide accurate, helpful answers based on the context provided. Be concise but thorough."},
+                    {"role": "system", "content": """You are an AI assistant for the Physical AI & Humanoid Robotics textbook. You MUST generate a final natural-language answer using ONLY the provided retrieved context.
+
+STRICT RULES (DO NOT BREAK):
+
+1. Use ONLY the given context. Do not use outside knowledge.
+2. Do NOT mention similarity scores, embeddings, retrieval, or chunks.
+3. Do NOT list chapters unless it improves clarity.
+4. Do NOT copy long passages verbatim.
+5. Do NOT hallucinate or infer beyond the context.
+6. Do NOT return the context chunks themselves - only return the synthesized answer.
+7. Do NOT include phrases like "Based on the provided context" or "According to the context".
+
+ANSWER STYLE:
+
+- Clear, academic, and student-friendly
+- Explain concepts as written in the book
+- Prefer concise explanations over verbosity
+- Reference chapter/section only when helpful
+
+CONTEXT HANDLING:
+
+- Use ONLY the most relevant context
+- Ignore weak or irrelevant sections
+- If multiple relevant sections exist, synthesize them logically
+
+FAILSAFE BEHAVIOR:
+
+- If the question cannot be answered from the context, respond with EXACTLY this sentence and nothing else:
+
+  "This information is not available in the provided text."
+
+PURPOSE:
+
+Your role is to help students understand the textbook content.
+You are NOT a general-purpose AI assistant."""},
                     {"role": "user", "content": prompt}
                 ],
                 max_tokens=500,

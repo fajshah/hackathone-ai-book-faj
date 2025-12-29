@@ -5,76 +5,94 @@ from qdrant_client.http import models
 from qdrant_client.http.models import PointStruct
 from config import settings
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 
 class EmbeddingsService:
     def __init__(self):
-        try:
-            # Log startup information for debugging
-            logger.info(f"Initializing Qdrant client...")
-            logger.info(f"QDRANT_URL: {settings.qdrant_url}")
-            logger.info(f"QDRANT_COLLECTION_NAME: {settings.qdrant_collection_name}")
+        max_retries = 5
+        retry_delay = 2  # seconds
 
-            # Initialize Qdrant client
-            if settings.qdrant_url and settings.qdrant_url.startswith('https://'):
-                # Use URL for cloud Qdrant instance
-                self.client = QdrantClient(
-                    url=settings.qdrant_url,
-                    api_key=settings.qdrant_api_key
-                )
-            else:
-                # Use host/port for local Qdrant instance
-                # Extract host and port from URL if in format http://host:port
-                import re
-                if settings.qdrant_url:
-                    match = re.match(r'http://([^:]+):(\d+)', settings.qdrant_url)
-                    if match:
-                        host = match.group(1)
-                        port = int(match.group(2))
-                        self.client = QdrantClient(
-                            host=host,
-                            port=port,
-                            api_key=settings.qdrant_api_key
-                        )
+        for attempt in range(max_retries):
+            try:
+                # Log startup information for debugging
+                logger.info(f"Initializing Qdrant client... (attempt {attempt + 1}/{max_retries})")
+                logger.info(f"QDRANT_URL: {settings.qdrant_url}")
+                logger.info(f"QDRANT_COLLECTION_NAME: {settings.qdrant_collection_name}")
+
+                # Initialize Qdrant client
+                if settings.qdrant_url and settings.qdrant_url.startswith('https://'):
+                    # Use URL for cloud Qdrant instance
+                    self.client = QdrantClient(
+                        url=settings.qdrant_url,
+                        api_key=settings.qdrant_api_key
+                    )
+                else:
+                    # Use host/port for local Qdrant instance
+                    # Extract host and port from URL if in format http://host:port
+                    import re
+                    if settings.qdrant_url:
+                        match = re.match(r'http://([^:]+):(\d+)', settings.qdrant_url)
+                        if match:
+                            host = match.group(1)
+                            port = int(match.group(2))
+                            self.client = QdrantClient(
+                                host=host,
+                                port=port,
+                                api_key=settings.qdrant_api_key
+                            )
+                        else:
+                            # Default to localhost if URL format is not recognized
+                            self.client = QdrantClient(
+                                host="localhost",
+                                port=6333,
+                                api_key=settings.qdrant_api_key
+                            )
                     else:
-                        # Default to localhost if URL format is not recognized
+                        # Default to localhost
                         self.client = QdrantClient(
                             host="localhost",
                             port=6333,
                             api_key=settings.qdrant_api_key
                         )
-                else:
-                    # Default to localhost
-                    self.client = QdrantClient(
-                        host="localhost",
-                        port=6333,
-                        api_key=settings.qdrant_api_key
-                    )
 
-            # Verify the client has the required methods
-            if not hasattr(self.client, 'search'):
-                logger.error("Qdrant client does not have 'search' method")
-                raise AttributeError("Qdrant client does not support required 'search' method")
+                # Verify the client has the required methods
+                if not hasattr(self.client, 'search'):
+                    logger.error("Qdrant client does not have 'search' method")
+                    raise AttributeError("Qdrant client does not support required 'search' method")
 
-            self.collection_name = settings.qdrant_collection_name
-            self.vector_size = 1536  # Default for OpenAI embeddings
+                self.collection_name = settings.qdrant_collection_name
+                self.vector_size = 1536  # Default for OpenAI embeddings
 
-            # Ensure collection exists and test connection
-            self._ensure_collection_exists()
+                # Test connection by checking if collection exists first
+                try:
+                    collections = self.client.get_collections()
+                    collection_names = [c.name for c in collections.collections]
+                    if self.collection_name not in collection_names:
+                        error_msg = f"Collection '{self.collection_name}' not found in Qdrant. Available collections: {collection_names}"
+                        logger.error(error_msg)
+                        raise Exception(error_msg)
+                    logger.info(f"✅ Qdrant connected successfully! Collection '{self.collection_name}' found.")
+                except Exception as e:
+                    logger.error(f"Failed to connect to Qdrant or collection not found: {str(e)}")
+                    raise
 
-            # Test connection by counting points
-            try:
+                # Test connection by counting points
                 count = self.client.count(collection_name=self.collection_name)
-                logger.info(f"Qdrant connection successful! Collection '{self.collection_name}' has {count.count} points")
-            except Exception as e:
-                logger.error(f"Failed to connect to Qdrant collection: {str(e)}")
-                raise
+                logger.info(f"✅ Qdrant connection successful! Collection '{self.collection_name}' has {count.count} points")
 
-        except Exception as e:
-            logger.error(f"Critical error initializing Qdrant client: {str(e)}")
-            # Fail fast - do not allow app to run without vector DB
-            raise RuntimeError(f"Qdrant initialization failed: {str(e)}")
+                return  # Success, exit the retry loop
+
+            except Exception as e:
+                logger.error(f"Attempt {attempt + 1} failed to initialize Qdrant client: {str(e)}")
+                if attempt < max_retries - 1:  # Don't sleep on the last attempt
+                    logger.info(f"Retrying in {retry_delay} seconds...")
+                    time.sleep(retry_delay)
+                else:
+                    logger.error(f"Critical error initializing Qdrant client after {max_retries} attempts: {str(e)}")
+                    # Fail fast - do not allow app to run without vector DB
+                    raise RuntimeError(f"Qdrant initialization failed after {max_retries} attempts: {str(e)}")
 
     def _ensure_collection_exists(self):
         """Ensure the collection exists in Qdrant"""
@@ -193,6 +211,7 @@ class EmbeddingsService:
             query_embedding = self.create_embedding(query)
 
             # Search for similar content in Qdrant database
+            # Using search method which is compatible with deployed environments
             results = self.client.search(
                 collection_name=self.collection_name,
                 query_vector=query_embedding,
@@ -213,7 +232,7 @@ class EmbeddingsService:
             ]
         except Exception as e:
             logger.error(f"Error in Qdrant search: {str(e)}")
-            # Return empty results if Qdrant is not available
+            # Return empty results if Qdrant is not available - fail gracefully
             return []
 
     def update_chunk(self, chunk_id: int, content: str, metadata: Dict[str, Any] = None):
@@ -298,6 +317,7 @@ class EmbeddingsService:
 # Create a global instance - fail fast if Qdrant is not available
 try:
     embeddings_service = EmbeddingsService()
+    logger.info("✅ Embeddings service initialized successfully!")
 except Exception as e:
     logger.error(f"Critical: Failed to initialize embeddings service: {str(e)}")
     # Don't create a mock service - fail fast to ensure vector DB is available

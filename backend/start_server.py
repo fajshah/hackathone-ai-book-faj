@@ -8,11 +8,8 @@ import os
 import sys
 from pathlib import Path
 
-# Add the python_backend directory to the path so imports work correctly
-python_backend_path = Path(__file__).parent / "python_backend"
-sys.path.insert(0, str(python_backend_path))
-
 # Change to the python_backend directory so relative imports work
+python_backend_path = Path(__file__).parent / "python_backend"
 original_cwd = os.getcwd()
 os.chdir(python_backend_path)
 
@@ -22,8 +19,8 @@ def main():
     port = int(os.getenv("PORT", 8000))
 
     # Import the app after changing the path and directory
-    from src.config import settings
-    from src.main import app
+    from config import settings
+    from main import app
 
     print(f"Starting {settings.app_name}...")
     print(f"Debug mode: {settings.debug}")
