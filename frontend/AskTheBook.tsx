@@ -17,12 +17,14 @@ export default function AskTheBook() {
 
   // Determine backend URL based on environment
   const isDevelopment = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+  // Use NEXT_PUBLIC_API_BASE_URL when available (set this in Vercel), otherwise fall back to HF Space
+  const HF_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL || "https://fajji-backend-chatbot.hf.space").replace(/\/$/, "");
   const API_URL = isDevelopment
     ? "http://localhost:8002/api/ask/public"
-    : "https://fajji-backend-chatbot.hf.space/api/ask/public";
+    : `${HF_BASE}/api/ask/public`;
   const IFRAME_URL = isDevelopment
     ? "http://localhost:8002"
-    : "https://fajji-backend-chatbot.hf.space";
+    : HF_BASE;
 
   const askQuestion = async () => {
     if (!question.trim()) return;
